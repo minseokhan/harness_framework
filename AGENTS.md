@@ -22,6 +22,12 @@
 - AC(Acceptance Criteria)를 직접 실행해 검증한 뒤 `phases/<phase>/index.json`의 step status를 갱신할 것.
 - 사용자 개입(API 키, 인증, 수동 설정 등)이 필요하면 즉시 `blocked` 처리하고 중단할 것.
 
+## Codex 가드레일 (`.codex/hooks.json`)
+Codex 훅으로 다음 가드레일이 자동 적용된다(최초 1회 `/hooks` 에서 신뢰 승인 필요):
+- `PreToolUse[Bash]` → 위험 명령(`rm -rf`, force push, `reset --hard`, `DROP TABLE`) 차단.
+- `PreToolUse[apply_patch]` → 소스 파일에 대응 테스트가 없으면 편집 차단(TDD 강제). `components/`·`types/`·설정/스타일 파일은 예외.
+- `Stop` → 턴 종료 시 `lint`/`build`/`test` 실행, 실패하면 수정을 이어가도록 유도(`package.json` 없으면 skip).
+
 ## 명령어
 npm run dev      # 개발 서버
 npm run build    # 프로덕션 빌드
